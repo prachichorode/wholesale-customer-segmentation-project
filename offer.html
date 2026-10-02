@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <h1>🎁 Create Customer Offer</h1>
+
+    <div class="offer-card">
+
+        <h2>👤 Customer Details</h2>
+
+        <p>
+            <b>Customer ID:</b>
+            {{ customer.Customer_ID }}
+        </p>
+
+        <p>
+            <b>Name:</b>
+            {{ customer.Customer_Name }}
+        </p>
+
+        <p>
+            <b>Email:</b>
+            {{ customer.Email or "Not Available" }}
+        </p>
+
+        <p>
+            <b>Phone:</b>
+            {{ customer.Phone or "Not Available" }}
+        </p>
+
+        <p>
+            <b>Segment:</b>
+            {{ customer.Segment or "Not Available" }}
+        </p>
+
+        <p>
+            <b>Annual Spending:</b>
+            ₹{{ "{:,.2f}".format(customer.Annual_Total_Spending) }}
+        </p>
+
+
+        <!-- OFFER ELIGIBILITY -->
+
+        {% if eligible %}
+
+        <div class="eligibility-success">
+
+            ✅ Customer is eligible for an offer.
+
+            <br><br>
+
+            🎁 Recommended Offer:
+
+            <strong>
+                {{ offer_discount }}% OFF
+            </strong>
+
+        </div>
+
+
+        <!-- SEND OFFER -->
+
+        <form
+            method="POST"
+            action="{{ url_for('send_offer') }}"
+        >
+
+            <input
+                type="hidden"
+                name="customer_id"
+                value="{{ customer.Customer_ID }}"
+            >
+
+            <input
+                type="hidden"
+                name="customer_name"
+                value="{{ customer.Customer_Name }}"
+            >
+
+            <input
+                type="hidden"
+                name="email"
+                value="{{ customer.Email }}"
+            >
+
+            <input
+                type="hidden"
+                name="phone"
+                value="{{ customer.Phone }}"
+            >
+
+            <input
+                type="hidden"
+                name="segment"
+                value="{{ customer.Segment }}"
+            >
+
+            <input
+                type="hidden"
+                name="discount"
+                value="{{ offer_discount }}"
+            >
+
+
+            <!-- DISCOUNT -->
+
+            <label>
+                <b>🎁 Offer Discount</b>
+            </label>
+
+            <p>
+                {{ offer_discount }}% OFF
+            </p>
+
+
+            <!-- CHANNEL -->
+
+            <label>
+                <b>📨 Send Through</b>
+            </label>
+
+            <div>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="channel"
+                        value="Email"
+                        checked
+                    >
+                    📧 Email
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="channel"
+                        value="SMS"
+                    >
+                    📱 SMS
+                </label>
+
+            </div>
+
+            <br>
+
+
+            <!-- SEND BUTTON -->
+
+            <button
+                type="submit"
+                class="offer-button"
+            >
+                🎁 Send {{ offer_discount }}% Offer
+            </button>
+
+        </form>
+
+
+        {% else %}
+
+        <div class="eligibility-danger">
+
+            ❌ Customer is not eligible for an offer.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

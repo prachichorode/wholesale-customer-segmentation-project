@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <h1>🎁 Create Customer Offer</h1>
+
+    <p>
+        Search a customer by Customer ID or Customer Name
+        to create a personalized offer.
+    </p>
+
+
+    <!-- ========================= -->
+    <!-- SEARCH CUSTOMER -->
+    <!-- ========================= -->
+
+    <div class="offer-search-card">
+
+        <form method="GET"
+              action="{{ url_for('create_offer_page') }}">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Enter Customer ID or Customer Name"
+                value="{{ search or '' }}"
+            >
+
+            <button type="submit">
+                🔍 Search Customer
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- CUSTOMER LIST -->
+    <!-- ========================= -->
+
+    {% if customers %}
+
+    <div class="customer-list-card">
+
+        <h2>👥 Customer List</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Customer Name</th>
+                    <th>Annual Spending</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for c in customers %}
+
+                <tr>
+
+                    <td>
+                        {{ c.Customer_ID }}
+                    </td>
+
+                    <td>
+                        {{ c.Customer_Name }}
+                    </td>
+
+                    <td>
+                        ₹{{ "{:,.2f}".format(c.spending) }}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="{{ url_for(
+                                'create_offer_page',
+                                customer_id=c.Customer_ID
+                            ) }}"
+                            class="offer-button"
+                        >
+                            Select
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ========================= -->
+    <!-- SELECTED CUSTOMER -->
+    <!-- ========================= -->
+
+    {% if customer %}
+
+    <div class="customer-offer-card">
+
+        <h2>👤 Selected Customer</h2>
+
+        <p>
+            <b>Customer ID:</b>
+            {{ customer.Customer_ID }}
+        </p>
+
+        <p>
+            <b>Name:</b>
+            {{ customer.Customer_Name }}
+        </p>
+
+        <p>
+            <b>Segment:</b>
+            {{ customer.Segment or 'Not Available' }}
+        </p>
+
+        <p>
+            <b>Annual Spending:</b>
+            ₹{{ "{:,.2f}".format(
+                customer.Annual_Total_Spending
+            ) }}
+        </p>
+
+        <p>
+            <b>Email:</b>
+            {{ customer.Email }}
+        </p>
+
+        <p>
+            <b>Phone:</b>
+            {{ customer.Phone }}
+        </p>
+
+
+        <!-- ========================= -->
+        <!-- OFFER ELIGIBILITY -->
+        <!-- ========================= -->
+
+        {% if eligible %}
+
+        <div class="eligibility-success">
+
+            ✅ Customer is eligible for an offer.
+
+            <br><br>
+
+            🎁 Recommended Offer:
+            <strong>{{ offer_discount }}% OFF</strong>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'create_offer',
+                customer_id=customer.Customer_ID
+            ) }}"
+            class="offer-button"
+        >
+            🎁 Give {{ offer_discount }}% Offer
+        </a>
+
+
+        {% else %}
+
+        <div class="eligibility-danger">
+
+            ❌ Customer is not eligible for an offer.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ========================= -->
+    <!-- CUSTOMER NOT FOUND -->
+    <!-- ========================= -->
+
+    {% if not customer and search %}
+
+    <div class="not-found">
+
+        ❌ Customer not found.
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

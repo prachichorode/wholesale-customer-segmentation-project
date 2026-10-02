@@ -1,0 +1,681 @@
+{% extends "base.html" %}
+
+{% block title %}
+PCA Visualization - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+PCA Visualization
+{% endblock %}
+
+{% block content %}
+
+<div class="pca-page">
+
+    <!-- PAGE HEADER -->
+    <div class="pca-header">
+
+        <span class="pca-label">
+            DIMENSIONALITY REDUCTION
+        </span>
+
+        <h1>
+            PCA Visualization
+        </h1>
+
+        <p>
+            Visual representation of wholesale customer clusters
+            using Principal Component Analysis.
+        </p>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="pca-summary">
+
+        <div class="pca-summary-card">
+
+            <div class="pca-summary-icon">
+                📊
+            </div>
+
+            <div>
+                <span>Visualization Method</span>
+                <strong>PCA</strong>
+            </div>
+
+        </div>
+
+
+        <div class="pca-summary-card">
+
+            <div class="pca-summary-icon">
+                🎯
+            </div>
+
+            <div>
+                <span>Best K</span>
+
+                <strong>
+                    {{ best_k|default("N/A", true) }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="pca-summary-card">
+
+            <div class="pca-summary-icon">
+                👥
+            </div>
+
+            <div>
+                <span>Total Customers</span>
+
+                <strong>
+                    {{ total_customers|default(0, true) }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PCA EXPLANATION -->
+    <section class="pca-section">
+
+        <div class="pca-section-heading">
+
+            <span class="section-number">
+                01
+            </span>
+
+            <div>
+
+                <h2>
+                    What is PCA?
+                </h2>
+
+                <p>
+                    Principal Component Analysis reduces multiple
+                    customer spending features into fewer dimensions
+                    for easier visualization.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pca-process">
+
+            <div class="pca-process-card">
+
+                <div class="process-number">
+                    STEP 01
+                </div>
+
+                <h3>
+                    Customer Features
+                </h3>
+
+                <p>
+                    Fresh, Milk, Grocery, Frozen,
+                    Detergents_Paper and Delicatessen.
+                </p>
+
+            </div>
+
+
+            <div class="pca-process-arrow">
+                →
+            </div>
+
+
+            <div class="pca-process-card">
+
+                <div class="process-number">
+                    STEP 02
+                </div>
+
+                <h3>
+                    PCA Transformation
+                </h3>
+
+                <p>
+                    Customer spending data is transformed
+                    into principal components.
+                </p>
+
+            </div>
+
+
+            <div class="pca-process-arrow">
+                →
+            </div>
+
+
+            <div class="pca-process-card">
+
+                <div class="process-number">
+                    STEP 03
+                </div>
+
+                <h3>
+                    2D Visualization
+                </h3>
+
+                <p>
+                    PC1 and PC2 are used to visualize
+                    customer clusters.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PCA GRAPH -->
+    <section class="pca-section">
+
+        <div class="pca-section-heading">
+
+            <span class="section-number">
+                02
+            </span>
+
+            <div>
+
+                <h2>
+                    Customer Cluster Visualization
+                </h2>
+
+                <p>
+                    Each point represents one wholesale customer.
+                    Different colors represent different K-Means clusters.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pca-chart-card">
+
+            <div class="pca-chart-wrapper">
+
+                <div class="pca-y-label">
+                    PC2
+                </div>
+
+
+                <!-- GRAPH -->
+
+                <div class="pca-chart">
+
+                    {% if pca_data %}
+
+                        {% for row in pca_data[:300] %}
+
+                            {% set cluster_value = row.get(
+                                'Cluster',
+                                row.get('cluster', 0)
+                            ) | int %}
+
+
+                            {% set x_position = row.get(
+                                'x_position',
+                                50
+                            ) | float %}
+
+
+                            {% set y_position = row.get(
+                                'y_position',
+                                50
+                            ) | float %}
+
+
+                            {% set point_pc1 = row.get(
+                                'PC1',
+                                row.get(
+                                    'pc1',
+                                    row.get('PC_1', 0)
+                                )
+                            ) | float %}
+
+
+                            {% set point_pc2 = row.get(
+                                'PC2',
+                                row.get(
+                                    'pc2',
+                                    row.get('PC_2', 0)
+                                )
+                            ) | float %}
+
+
+                            <div
+                                class="pca-point pca-cluster-{{ cluster_value }}"
+                                style="
+                                    --x-position: {{ x_position }};
+                                    --y-position: {{ y_position }};
+                                "
+                                title="Customer {{ loop.index }} | PC1: {{ point_pc1|round(3) }} | PC2: {{ point_pc2|round(3) }} | Cluster: {{ cluster_value }}"
+                            ></div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="pca-empty">
+
+                            <div class="pca-empty-icon">
+                                📊
+                            </div>
+
+                            <h3>
+                                No PCA Data Available
+                            </h3>
+
+                            <p>
+                                Upload a customer dataset and process
+                                the model first.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="pca-x-label">
+                    PC1
+                </div>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="pca-legend">
+
+                <div class="legend-title">
+                    Customer Clusters
+                </div>
+
+
+                <div class="legend-items">
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-0"></i>
+                        Cluster 0
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-1"></i>
+                        Cluster 1
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-2"></i>
+                        Cluster 2
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-3"></i>
+                        Cluster 3
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-4"></i>
+                        Cluster 4
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-5"></i>
+                        Cluster 5
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-6"></i>
+                        Cluster 6
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-dot cluster-7"></i>
+                        Cluster 7
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- GRAPH EXPLANATION -->
+
+            <div class="pca-explanation">
+
+                <div class="explanation-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <h3>
+                        How to Read This Graph
+                    </h3>
+
+                    <p>
+                        Each dot represents one wholesale customer.
+                        Customers with similar purchasing behavior
+                        appear closer together in the PCA space.
+                    </p>
+
+                    <p>
+                        Different colors indicate the clusters
+                        generated by the K-Means algorithm.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CLUSTER DISTRIBUTION -->
+
+    <section class="pca-section">
+
+        <div class="pca-section-heading">
+
+            <span class="section-number">
+                03
+            </span>
+
+            <div>
+
+                <h2>
+                    Cluster Distribution
+                </h2>
+
+                <p>
+                    Number of customers assigned to each cluster.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="cluster-distribution">
+
+            {% if pca_data %}
+
+                {% for cluster_number in range(8) %}
+
+                    {% set cluster_count = namespace(value=0) %}
+
+
+                    {% for row in pca_data %}
+
+                        {% set current_cluster = row.get(
+                            'Cluster',
+                            row.get('cluster', -1)
+                        ) | int %}
+
+
+                        {% if current_cluster == cluster_number %}
+
+                            {% set cluster_count.value =
+                                cluster_count.value + 1 %}
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    <div class="cluster-card">
+
+                        <div class="cluster-card-top">
+
+                            <div class="cluster-card-name">
+
+                                <span
+                                    class="legend-dot cluster-{{ cluster_number }}"
+                                ></span>
+
+                                Cluster {{ cluster_number }}
+
+                            </div>
+
+
+                            <div class="cluster-card-count">
+                                {{ cluster_count.value }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="cluster-card-label">
+                            Customers
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="pca-empty">
+
+                    <div class="pca-empty-icon">
+                        👥
+                    </div>
+
+                    <h3>
+                        No Cluster Data
+                    </h3>
+
+                    <p>
+                        Cluster information will appear after
+                        processing the dataset.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- PCA COORDINATES -->
+
+    <section class="pca-section">
+
+        <div class="pca-section-heading">
+
+            <span class="section-number">
+                04
+            </span>
+
+            <div>
+
+                <h2>
+                    PCA Coordinates
+                </h2>
+
+                <p>
+                    Principal component values for the customers.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pca-table-card">
+
+            {% if pca_data %}
+
+                <div class="pca-table-wrapper">
+
+                    <table class="pca-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Customer
+                                </th>
+
+                                <th>
+                                    PC1
+                                </th>
+
+                                <th>
+                                    PC2
+                                </th>
+
+                                <th>
+                                    Cluster
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for row in pca_data[:100] %}
+
+                                {% set table_pc1 = row.get(
+                                    'PC1',
+                                    row.get(
+                                        'pc1',
+                                        row.get('PC_1', 0)
+                                    )
+                                ) | float %}
+
+
+                                {% set table_pc2 = row.get(
+                                    'PC2',
+                                    row.get(
+                                        'pc2',
+                                        row.get('PC_2', 0)
+                                    )
+                                ) | float %}
+
+
+                                {% set table_cluster = row.get(
+                                    'Cluster',
+                                    row.get('cluster', 'N/A')
+                                ) %}
+
+
+                                <tr>
+
+                                    <td>
+                                        Customer {{ loop.index }}
+                                    </td>
+
+                                    <td>
+                                        {{ "%.4f"|format(table_pc1) }}
+                                    </td>
+
+                                    <td>
+                                        {{ "%.4f"|format(table_pc2) }}
+                                    </td>
+
+                                    <td>
+
+                                        <span class="cluster-badge">
+
+                                            Cluster
+                                            {{ table_cluster }}
+
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="pca-empty">
+
+                    <div class="pca-empty-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Coordinates Available
+                    </h3>
+
+                    <p>
+                        PCA coordinates will appear after
+                        model processing.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- IMPORTANT NOTE -->
+
+    <div class="pca-note">
+
+        <div class="pca-note-icon">
+            💡
+        </div>
+
+        <div>
+
+            <h3>
+                Important Note
+            </h3>
+
+            <p>
+                PCA is used only for visualization.
+                Customer segmentation is performed using
+                K-Means clustering on standardized spending features.
+            </p>
+
+            <p>
+                Cluster numbers are technical identifiers.
+                Business segment names are assigned separately
+                according to customer spending behavior.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

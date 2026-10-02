@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}
+Offer History | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Offer History
+{% endblock %}
+
+{% block content %}
+
+<div class="history-page">
+
+    <div class="history-header">
+
+        <div>
+            <span class="section-label">
+                BUSINESS MANAGEMENT
+            </span>
+
+            <h1>
+                Offer History
+            </h1>
+
+            <p>
+                View all customer offers created by the manager.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if offers %}
+
+    <div class="history-card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Customer ID</th>
+                        <th>Segment</th>
+                        <th>Discount</th>
+                        <th>Channel</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for offer in offers %}
+
+                    <tr>
+
+                        <td>
+                            {{ offer['id'] }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ offer['customer_name'] }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ offer['customer_id'] }}
+                        </td>
+
+                        <td>
+                            {{ offer['segment'] }}
+                        </td>
+
+                        <td>
+                            <span class="discount-badge">
+                                {{ offer['discount'] }}%
+                            </span>
+                        </td>
+
+                        <td>
+
+                            {% if offer['channel'] == 'Email' %}
+                                📧 Email
+                            {% else %}
+                                📱 SMS
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <span class="status-badge">
+                                {{ offer['status'] }}
+                            </span>
+
+                        </td>
+
+                        <td>
+                            {{ offer['created_at'] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-card">
+
+        <div class="empty-icon">
+            📋
+        </div>
+
+        <h2>
+            No Offers Yet
+        </h2>
+
+        <p>
+            No customer offers have been created yet.
+        </p>
+
+        <a
+            href="{{ url_for('customer_search') }}"
+            class="primary-btn"
+        >
+            Search Customers
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.history-page {
+    padding: 30px;
+}
+
+.history-header {
+    background: white;
+    padding: 28px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.history-header h1 {
+    margin: 8px 0;
+    color: #17365d;
+}
+
+.history-header p {
+    color: #667085;
+    margin: 0;
+}
+
+.history-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+
+thead {
+    background: #f4f7fc;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    color: #17365d;
+    font-size: 14px;
+}
+
+td {
+    padding: 15px;
+    border-top: 1px solid #edf0f5;
+    color: #475467;
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #fafcff;
+}
+
+.discount-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #e8f1ff;
+    color: #1558b0;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #e8f7ed;
+    color: #16803c;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.empty-card {
+    background: white;
+    padding: 60px 30px;
+    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.empty-icon {
+    font-size: 50px;
+}
+
+.empty-card h2 {
+    color: #17365d;
+}
+
+.empty-card p {
+    color: #667085;
+    margin-bottom: 25px;
+}
+
+.primary-btn {
+    display: inline-block;
+    padding: 12px 22px;
+    background: #1558b0;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+</style>
+
+{% endblock %}

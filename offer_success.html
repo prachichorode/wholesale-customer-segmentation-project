@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}
+Offer Success | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Offer Success
+{% endblock %}
+
+{% block content %}
+
+<div class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✅
+        </div>
+
+        <h1>Offer Created Successfully!</h1>
+
+        <p class="success-message">
+            The personalized customer offer has been created successfully.
+        </p>
+
+        <div class="offer-details">
+
+            <div class="detail-row">
+                <span>Customer ID</span>
+                <strong>{{ customer_id }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Customer Name</span>
+                <strong>{{ customer_name }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Segment</span>
+                <strong>{{ segment }}</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Discount</span>
+                <strong>{{ discount }}%</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Channel</span>
+                <strong>
+                    {% if channel == "Email" %}
+                        📧 Email
+                    {% else %}
+                        📱 SMS
+                    {% endif %}
+                </strong>
+            </div>
+
+            {% if email %}
+            <div class="detail-row">
+                <span>Email</span>
+                <strong>{{ email }}</strong>
+            </div>
+            {% endif %}
+
+            {% if phone %}
+            <div class="detail-row">
+                <span>Phone</span>
+                <strong>{{ phone }}</strong>
+            </div>
+            {% endif %}
+
+            <div class="detail-row">
+                <span>Status</span>
+                <strong class="status">
+                    {{ status }}
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="message-preview">
+
+            <h3>📩 Personalized Message</h3>
+
+            <div class="message-box">
+                {{ message }}
+            </div>
+
+        </div>
+
+        <div class="success-actions">
+
+            <a
+                href="{{ url_for('customer_search') }}"
+                class="primary-btn"
+            >
+                ← Back to Customers
+            </a>
+
+            <a
+                href="{{ url_for('offer_history') }}"
+                class="secondary-btn"
+            >
+                📋 Offer History
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.success-page {
+    padding: 30px;
+}
+
+.success-card {
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.success-icon {
+    text-align: center;
+    font-size: 55px;
+}
+
+.success-card h1 {
+    text-align: center;
+    color: #17365d;
+}
+
+.success-message {
+    text-align: center;
+    color: #667085;
+    margin-bottom: 30px;
+}
+
+.offer-details {
+    border: 1px solid #e4e8ef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row span {
+    color: #667085;
+}
+
+.detail-row strong {
+    color: #17365d;
+}
+
+.detail-row .status {
+    color: #16803c;
+}
+
+.message-preview {
+    margin-top: 25px;
+}
+
+.message-preview h3 {
+    color: #17365d;
+}
+
+.message-box {
+    background: #f4f7fc;
+    border-left: 4px solid #1558b0;
+    padding: 18px;
+    border-radius: 8px;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary-btn {
+    background: #1558b0;
+    color: white !important;
+}
+
+.secondary-btn {
+    background: #eef3f9;
+    color: #1558b0 !important;
+}
+
+</style>
+
+{% endblock %}
